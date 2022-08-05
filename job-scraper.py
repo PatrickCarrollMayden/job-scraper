@@ -15,8 +15,12 @@ def transform(soup):
     divs = soup.find_all('table', class_ = 'jobCard_mainContent')
     for item in divs:
         title = item.find('a').text
-        print(title)
-    return
+        company = item.find('span', class_ = 'companyName').text
+        try:
+            salary = item.find('div', class_ = 'attribute_snippet').text
+        except:
+            salary = ''
+
 
 c = extract(0)
 transform(c)
