@@ -16,13 +16,24 @@ def transform(soup):
     for item in divs:
         title = item.find('a').text
         company = item.find('span', class_ = 'companyName').text
+        
         try:
             salary = item.find('div', class_ = 'attribute_snippet').text
         except:
             salary = ''
 
+        job = {
+            'title': title,
+            'company': company,
+            'salary': salary
+        }
+        joblist.append(job)
+    return
 
+joblist = []
+        
 c = extract(0)
 transform(c)
+print(joblist)
 
 
