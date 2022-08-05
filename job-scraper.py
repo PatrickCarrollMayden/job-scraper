@@ -1,4 +1,3 @@
-from asyncio import base_futures
 from fileinput import filename
 import requests
 from bs4 import BeautifulSoup
@@ -7,14 +6,19 @@ import pandas as pd
 def get_search_term_and_translate():
     user_input = input('What job results would you like?')
     search_params = user_input.split()
+    base_url = ''
+
     if len(search_params) > 1:
-        base_url = ''
         for index, word in enumerate(search_params):
             if index+1 != len(search_params):
                 base_url += word + "%20"
             else:
                 base_url += word
+    else:
+        base_url += search_params[0]
+
     print(base_url)
+    return base_url
 
 
 def extract(page):
