@@ -1,6 +1,21 @@
+from asyncio import base_futures
+from fileinput import filename
 import requests
 from bs4 import BeautifulSoup
 import pandas as pd
+
+def get_search_term_and_translate():
+    user_input = input('What job results would you like?')
+    search_params = user_input.split()
+    if len(search_params) > 1:
+        base_url = ''
+        for index, word in enumerate(search_params):
+            if index+1 != len(search_params):
+                base_url += word + "%20"
+            else:
+                base_url += word
+    print(base_url)
+
 
 def extract(page):
     headers = {'User-Agent' : 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/104.0.0.0 Safari/537.36'}
@@ -31,6 +46,8 @@ def transform(soup):
         joblist.append(job)
     return
 
+get_search_term_and_translate()
+
 joblist = []
 
 for i in range(0, 40, 10):    #looping through 4 pages worth
@@ -40,8 +57,10 @@ for i in range(0, 40, 10):    #looping through 4 pages worth
 
 df = pd.DataFrame(joblist)
 
-print(df.head())
+filename = 'jobs.csv'
 
-df.to_csv('jobs.csv')
+print(f'Exported to {filename}')
+
+df.to_csv(filename)
 
 
