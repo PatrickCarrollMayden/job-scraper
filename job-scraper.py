@@ -1,5 +1,6 @@
 import requests
 from bs4 import BeautifulSoup
+import pandas as pd
 
 def extract(page):
     headers = {'User-Agent' : 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/104.0.0.0 Safari/537.36'}
@@ -31,9 +32,11 @@ def transform(soup):
     return
 
 joblist = []
-        
-c = extract(0)
-transform(c)
-print(joblist)
+
+for i in range(0, 40, 10):    #looping through 4 pages worth
+    c = extract(0)
+    transform(c)
+
+print(len(joblist))
 
 
