@@ -3,8 +3,13 @@ import requests
 from bs4 import BeautifulSoup
 import pandas as pd
 
+filename = 'jobs.csv'
+
 user_input = input('What job results would you like?')
 search_params = user_input.split()
+
+location_input = input('What location?')
+location_params = location_input.split()
 
 def get_search_term_and_translate():
     base_url = ''
@@ -20,12 +25,27 @@ def get_search_term_and_translate():
 
     return base_url
 
+def get_search_location():
+    location = ''
+
+    if len(location_params) > 1:
+        for index, word in enumerate(location_params):
+            if index+1 != len(location_params):
+                location += word + "%20"
+            else:
+                location += word
+    else:
+        location += location_params[0]
+
+    return location
+
 
 def extract(page):
     base_url = get_search_term_and_translate()
+    location = get_search_location()
 
     headers = {'User-Agent' : 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/104.0.0.0 Safari/537.36'}
-    url = f'https://uk.indeed.com/jobs?q={base_url}&l=London%2C%20Greater%20London&start={page}&vjk=133a86ba2db9357c'
+    url = f'https://uk.indeed.com/jobs?q={base_url}&l={location}&start={page}'
 
     response = requests.get(url, headers)
 
@@ -54,14 +74,13 @@ def transform(soup):
 
 joblist = []
 
-for i in range(0, 40, 10):    #looping through 4 pages worth
+for i in range(0, 60, 15):    #looping through 4 pages worth
     print(f'Getting page, {i}')
     c = extract(0)
     transform(c)
 
 df = pd.DataFrame(joblist)
-
-filename = 'jobs.csv'
+df = df.drop_duplicates(subset=None, keep="first", inplace=False)
 
 print(f'Exported to {filename}')
 
