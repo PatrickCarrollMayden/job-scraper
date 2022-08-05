@@ -3,9 +3,10 @@ import requests
 from bs4 import BeautifulSoup
 import pandas as pd
 
+user_input = input('What job results would you like?')
+search_params = user_input.split()
+
 def get_search_term_and_translate():
-    user_input = input('What job results would you like?')
-    search_params = user_input.split()
     base_url = ''
 
     if len(search_params) > 1:
@@ -17,13 +18,14 @@ def get_search_term_and_translate():
     else:
         base_url += search_params[0]
 
-    print(base_url)
     return base_url
 
 
 def extract(page):
+    base_url = get_search_term_and_translate()
+
     headers = {'User-Agent' : 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/104.0.0.0 Safari/537.36'}
-    url = f'https://uk.indeed.com/jobs?q=python%20developer&l=London%2C%20Greater%20London&start={page}&vjk=133a86ba2db9357c'
+    url = f'https://uk.indeed.com/jobs?q={base_url}&l=London%2C%20Greater%20London&start={page}&vjk=133a86ba2db9357c'
 
     response = requests.get(url, headers)
 
@@ -49,8 +51,6 @@ def transform(soup):
         }
         joblist.append(job)
     return
-
-get_search_term_and_translate()
 
 joblist = []
 
