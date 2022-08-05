@@ -6,6 +6,19 @@ def extract(page):
     url = f'https://uk.indeed.com/jobs?q=python%20developer&l=London%2C%20Greater%20London&start={page}&vjk=133a86ba2db9357c'
 
     response = requests.get(url, headers)
-    return response.status_code
 
-print(extract(0))
+    soup = BeautifulSoup(response.content, 'html.parser')
+    return soup
+
+
+def transform(soup):
+    divs = soup.find_all('table', class_ = 'jobCard_mainContent')
+    for item in divs:
+        title = item.find('a').text
+        print(title)
+    return
+
+c = extract(0)
+transform(c)
+
+
